@@ -2,6 +2,7 @@ import streamlit as st
 import PyPDF2
 from gtts import gTTS
 import os
+import base64
 
 # Define the function for creating the download link
 def get_binary_file_downloader_html(bin_file, file_label='File'):
