@@ -23,11 +23,15 @@ if pdf_file is not None:
     audio_file_path = "output.mp3"
     tts.save(audio_file_path)
 
+    # Provide download link for the audiobook
+    with open(audio_file_path, "rb") as f:
+        audio_bytes = f.read()
+    audio_base64 = base64.b64encode(audio_bytes).decode()
+    href = f'<a href="data:audio/mp3;base64,{audio_base64}" download="output.mp3">Download Audiobook</a>'
+    st.markdown(href, unsafe_allow_html=True)
+
     # Display the audio player
     st.audio(audio_file_path, format="audio/mp3")
-
-    # Provide download link for the audiobook
-    st.markdown(f"**[Download Audiobook](data:audio/mp3;base64,{base64.b64encode(open(audio_file_path, 'rb').read()).decode()})**")
 
     # Clean up temporary audio file
     os.remove(audio_file_path)
