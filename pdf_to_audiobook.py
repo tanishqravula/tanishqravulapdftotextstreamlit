@@ -1,8 +1,15 @@
 import streamlit as st
 import PyPDF2
-import base64
 from gtts import gTTS
 import os
+
+# Define the function for creating the download link
+def get_binary_file_downloader_html(bin_file, file_label='File'):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    b64 = base64.b64encode(data).decode()
+    href = f'<a href="data:audio/mp3;base64,{b64}" download="{file_label}.mp3">Download {file_label}</a>'
+    return href
 
 st.title("PDF to Audiobook Converter")
 
@@ -24,11 +31,7 @@ if pdf_file is not None:
     tts.save(audio_file_path)
 
     # Provide download link for the audiobook
-    with open(audio_file_path, "rb") as f:
-        audio_bytes = f.read()
-    audio_base64 = base64.b64encode(audio_bytes).decode()
-    href = f'<a href="data:audio/mp3;base64,{audio_base64}" download="output.mp3">Download Audiobook</a>'
-    st.markdown(href, unsafe_allow_html=True)
+    st.markdown(get_binary_file_downloader_html(audio_file_path, "Audiobook"), unsafe_allow_html=True)
 
     # Display the audio player
     st.audio(audio_file_path, format="audio/mp3")
